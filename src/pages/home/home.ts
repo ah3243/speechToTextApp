@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { AlertController } from 'ionic-angular';
 
+// Possible import of Speech recognition plugin??
+// import { SpeechRecognition } from 'SpeechRecognition';
+
 import { Platform } from 'ionic-angular';
 
 import { NavController } from 'ionic-angular';
@@ -19,12 +22,14 @@ export class HomePage {
 
   constructor(public navCtrl: NavController, platform: Platform, private alertCtrl: AlertController) {
     platform = platform;
-    platform.ready().then((readySource) => { 
+    // Set isReady boolean
+    platform.ready().then(() => { 
       console.log('platform ready..');
       this.ready = true;
     });
   }
 
+  // Create debugging alerts
   presentAlert(input: string ) {
     let alert = this.alertCtrl.create({
       title: input,
@@ -32,27 +37,36 @@ export class HomePage {
     });
     alert.present();
   }  
-  
+
+  // Speech to text function  
   SpeechToText(){
-    if(this.ready){
+    if (this.ready) {
+      // Debuggin alert
       this.presentAlert('inside speechToText');
-    //   console.log('passed go..');
-    //     this.recognition = new SpeechRecognition(); 
-    //     this.recognition.lang = 'en-US';
-    //     this.presentAlert();
-    //     this.recognition.onnomatch = (event => {
-    //         console.log('No match found.');
-    //     });
-    //     this.recognition.onerror = (event => {
-    //         console.log('Error happens.');
-    //     });
-    //     this.recognition.onresult = (event => {
-    //         if (event.results.length > 0) {
-    //             console.log('Text: ', event.results[0][0].transcript);          
-    //         }
-    //     });     
-    //     this.recognition.start();
+
+      // Create new instance of Speech Recognition/set params
+      this.recognition = new SpeechRecognition(); 
+      this.recognition.lang = 'en-US';
+
+      // Log if not match found
+      this.recognition.onnomatch = (event => {
+          console.log('No match found.');
+      });
+
+      // Log if Error
+      this.recognition.onerror = (event => {
+          console.log('Error happens.');
+      });
+
+      // Log results if found
+      this.recognition.onresult = (event => {
+          if (event.results.length > 0) {
+              console.log('Text: ', event.results[0][0].transcript);          
+          }
+      });     
+      
+      // Start recognition
+      this.recognition.start();
     };
   }  
-
 }
